@@ -19,10 +19,6 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
         {
             string query = @"SELECT * FROM u WHERE u.login = @login";
             var queryParams = new Dictionary<string, object> {{ "@login", login }};
-                //{ "@hashedPassword", hashedPassword }};
-
-                // TO DO Odkomentowac po dodaniu azureTokena
-                //{ "@description", azureToken } };   
 
             return await GetItemAsync(query, queryParams);
         }

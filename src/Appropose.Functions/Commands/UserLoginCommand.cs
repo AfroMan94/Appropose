@@ -47,13 +47,10 @@ namespace Appropose.Functions.Commands
         }
         public async Task<Result<UserLoginCommandResponse>> Handle(UserLoginCommand request, CancellationToken cancellationToken)
         {
-
-            //hashowanie 
             if (string.IsNullOrEmpty(request.Password))
             {
                 return Result.Fail(new ValidationError("HashedPassword must be specified"));
             }
-            //
             if (string.IsNullOrEmpty(request.Login))
             {
                 return Result.Fail(new ValidationError("Login must be specified"));
