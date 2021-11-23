@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Appropose.Core.Domain.Entities;
 using Appropose.Core.Interfaces;
@@ -24,12 +25,11 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
         public PostRepository(ICosmosDbContainerFactory factory) : base(factory)
         { }
 
-        public async Task<IEnumerable<PostEntity>> GetPostsByTitleAsync(string description)
+        public async Task<IEnumerable<PostEntity>> GetAllPostsAsync()
         {
-            string query = @"SELECT * FROM posts WHERE title = @title";
-            var queryParams = new Dictionary<string, object> {{"@title", description}};
-
-            return await GetItemsAsync(query, queryParams);
+            string query = @"SELECT * FROM posts";
+            var result = await GetItemsAsync(query);
+            return result.ToList();
         }
     }
 }

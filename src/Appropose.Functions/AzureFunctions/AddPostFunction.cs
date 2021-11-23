@@ -1,11 +1,12 @@
+using System.Globalization;
 using System.Threading.Tasks;
 using Appropose.Functions.Commands;
+using Appropose.Functions.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
-using ToDoList.Functions.Extensions;
 
 namespace Appropose.Functions.AzureFunctions
 {
@@ -22,20 +23,35 @@ namespace Appropose.Functions.AzureFunctions
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req)
         {
-
             var formData = await req.ReadFormAsync();
             var imageFile = req.Form.Files["image"];
+            if (!formData.TryGetValue("title", out var titleValue) ||
+                !formData.TryGetValue("description", out var descriptionValue) ||
+                !formData.TryGetValue("latitude", out var latitudeValue) ||
+                !formData.TryGetValue("longitude", out var longtitudeValue)
+               )
+            {
+                return new BadRequestObjectResult("Not all required fields are specified!");
+            }
 
-            var command = new AddPostCommand(formData["title"], formData["description"], formData["localization"], imageFile);
+            float latitude;
+            float longtitude;
+            if (!float.TryParse(latitudeValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out latitude) ||
+                !float.TryParse(longtitudeValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out longtitude))
+            {
+                return new BadRequestObjectResult("Latitude or Longtitude format is wrong!");
+            }
+
+            var command = new AddPostCommand(
+                titleValue, 
+                descriptionValue, 
+                latitude, 
+                longtitude,
+                imageFile);
             
             var result = await _mediator.Send(command);
             
-            if (result.IsFailed)
-            {
-                return result.GetErrorResponse();
-            }
-
-            return new OkObjectResult("Post successfully created.");
+            return result.IsFailed ? result.GetErrorResponse() : new OkObjectResult("Post successfully created.");
         }
     }
 }

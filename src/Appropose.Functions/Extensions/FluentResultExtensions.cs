@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
+using Appropose.Functions.FluentErrors;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Functions.FluentErrors;
 
-namespace ToDoList.Functions.Extensions
+namespace Appropose.Functions.Extensions
 {
     public static class FluentResultExtensions
     {

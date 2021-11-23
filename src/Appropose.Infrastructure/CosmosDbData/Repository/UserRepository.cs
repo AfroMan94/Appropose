@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Appropose.Infrastructure.CosmosDbData.Repository
 {
-    public class UserRepository  : CosmosDbRepository<UserEntity>, IUserRepository
+    public class UserRepository : CosmosDbRepository<UserEntity>, IUserRepository
     {
         public UserRepository(ICosmosDbContainerFactory factory) : base(factory)
         { }
