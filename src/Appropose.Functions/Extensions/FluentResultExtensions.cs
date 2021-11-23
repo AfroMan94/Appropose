@@ -32,9 +32,14 @@ namespace ToDoList.Functions.Extensions
 
             if (result.HasError<RuntimeError>())
             {
-                return new InternalServerErrorResult();
-            }
+                var errors = result.Errors.OfType<RuntimeError>();
+                var serverError = new ObjectResult(GetErrorMessage(errors))
+                {
+                    StatusCode = 500
+                };
 
+                return serverError;
+            }
 
             throw new InvalidOperationException("No errors to process.");
         }
