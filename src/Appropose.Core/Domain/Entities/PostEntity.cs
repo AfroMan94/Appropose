@@ -24,5 +24,4 @@ namespace Appropose.Core.Domain.Entities
         public Guid[] Solutions { get; set; }
 
     }
-
 }

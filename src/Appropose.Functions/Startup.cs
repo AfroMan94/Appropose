@@ -49,6 +49,9 @@ namespace Appropose.Functions
                 cosmosDbConfig.Containers);
 
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddAutoMapper(this.GetType().Assembly);
+
         }
     }
 }
