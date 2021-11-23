@@ -56,7 +56,12 @@ namespace Appropose.Functions.Commands
                 return Result.Fail(new ValidationError("Login must be specified"));
             }
 
-           var user = await _user.GetUserByLogin(request.Login);
+            var user = await _user.GetUserByLogin(request.Login);
+
+            if (user is null)
+            {
+                Result.Fail(new NotFoundError("Not found"));
+            }
             var result = BCryptHelper.CheckPassword(request.Password, user.Password);
 
             if (!result)
