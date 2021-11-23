@@ -28,7 +28,8 @@ namespace Appropose.Functions.AzureFunctions
             if (!formData.TryGetValue("title", out var titleValue) ||
                 !formData.TryGetValue("description", out var descriptionValue) ||
                 !formData.TryGetValue("latitude", out var latitudeValue) ||
-                !formData.TryGetValue("longitude", out var longtitudeValue)
+                !formData.TryGetValue("longitude", out var longtitudeValue) ||
+                !formData.TryGetValue("userId", out var userIdValue)
                )
             {
                 return new BadRequestObjectResult("Not all required fields are specified!");
@@ -47,6 +48,7 @@ namespace Appropose.Functions.AzureFunctions
                 descriptionValue, 
                 latitude, 
                 longtitude,
+                userIdValue,
                 imageFile);
             
             var result = await _mediator.Send(command);
