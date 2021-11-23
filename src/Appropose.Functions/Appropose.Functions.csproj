@@ -4,6 +4,7 @@
 	    <AzureFunctionsVersion>v3</AzureFunctionsVersion>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="10.1.1" />
 		<PackageReference Include="BCrypt" Version="1.0.0" />
 		<PackageReference Include="FluentResults" Version="3.0.0" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
@@ -26,5 +27,7 @@
 	<ItemGroup>
 	  <Folder Include="Commands\" />
 	  <Folder Include="AzureFunctions\" />
+	  <Folder Include="MapperConfigurations\" />
+	  <Folder Include="Dtos\" />
 	</ItemGroup>
 </Project>
