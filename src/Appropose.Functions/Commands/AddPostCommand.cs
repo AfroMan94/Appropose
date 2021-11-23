@@ -3,11 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Appropose.Core.Domain.Entities;
 using Appropose.Core.Interfaces;
+using Azure.Storage.Blobs;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using ToDoList.Functions.FluentErrors;
+using Microsoft.Extensions.Configuration;
 using static System.String;
 
 namespace Appropose.Functions.Commands
@@ -33,13 +35,15 @@ namespace Appropose.Functions.Commands
 
         private readonly ILogger _logger;
         private readonly IPostRepository _repo;
-        private readonly IStorageService _storage;
+        private readonly BlobServiceClient _blobServiceClient;
+        private readonly IStorageService _storageService;
 
-        public AddPostCommandHandler(ILogger logger, IPostRepository repo, IStorageService storage)
+        public AddPostCommandHandler(ILogger logger, IPostRepository repo, BlobServiceClient blobServiceClient, IStorageService storageService)
         {
             _logger = logger;
             _repo = repo;
-            _storage = storage;
+            _blobServiceClient = blobServiceClient;
+            _storageService = storageService;
         }
 
         public async Task<Result> Handle(AddPostCommand request, CancellationToken cancellationToken)
@@ -69,8 +73,9 @@ namespace Appropose.Functions.Commands
             try
             {
                 await _repo.AddItemAsync(entity);
-                var filePath = await _storage.UploadFileAsync(request.Image, request.Image.FileName);
-                entity.UpdateImagePath(filePath);
+                var fileName = $"{Guid.NewGuid()}-{request.Image.FileName}";
+                await _storageService.UploadImageAsync(request.Image, fileName);
+                entity.SetImageName(fileName);
                 await _repo.UpdateItemAsync(entity.Id, entity);
             }
             catch (Exception ex)

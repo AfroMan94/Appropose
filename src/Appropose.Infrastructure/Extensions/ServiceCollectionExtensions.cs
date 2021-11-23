@@ -46,7 +46,6 @@ namespace Appropose.Infrastructure.Extensions
         /// <param name="configuration"></param>
         public static void SetupStorage(this IServiceCollection services, IConfiguration configuration)
         {
-            var blobServiceClient = new BlobServiceClient(configuration.GetConnectionString("StorageConnectionString"))
             // Register IBlobStorage, which is used in AzureBlobStorageService
             // Avoid using IBlobStorage directly outside of AzureBlobStorageService.
             services.AddScoped(

@@ -1,37 +1,26 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Storage.Net.Blobs;
-using System;
-using System.IO;
 using System.Threading.Tasks;
 using Appropose.Core.Interfaces;
+using Azure.Storage.Blobs;
+using Microsoft.Extensions.Configuration;
 
 namespace Appropose.Infrastructure.Services
 {
-    /// <summary>
-    ///     Azure Blob Storage
-    /// </summary>
     public class AzureBlobStorageService : IStorageService
     {
-        private readonly IBlobStorage _blobStorage;
+        private readonly BlobContainerClient _blobContainerClient;
 
-        public AzureBlobStorageService(IBlobStorage blobStorage)
+        public AzureBlobStorageService(IConfiguration config)
         {
-            _blobStorage = blobStorage ?? throw new ArgumentNullException(nameof(blobStorage));
+            string connectionString = config.GetConnectionString("StorageConnectionString");
+            _blobContainerClient = new BlobContainerClient(connectionString, "images");
+            _blobContainerClient.CreateIfNotExists();
         }
 
-        public async Task<string> UploadFileAsync(IFormFile file, string fullPath)
+        public async Task UploadImageAsync(IFormFile file, string fileName)
         {
-            await using Stream str = file.OpenReadStream();
-            await _blobStorage.WriteAsync(fullPath, str);
-
-            return fullPath;
-        }
-
-        public async Task<Stream> GetFileStreamAsync(string filePath)
-        {
-            MemoryStream ms = new MemoryStream();
-            await _blobStorage.ReadToStreamAsync(filePath, ms);
-            return ms;
+            var blob = _blobContainerClient.GetBlobClient(fileName);
+            await blob.UploadAsync(file.OpenReadStream());
         }
 
     }

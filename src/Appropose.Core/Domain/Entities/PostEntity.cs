@@ -11,8 +11,8 @@ namespace Appropose.Core.Domain.Entities
         [JsonProperty("description")]
         public string Description { get; private set; }
 
-        [JsonProperty("imagePath")]
-        public string ImagePath { get; private set; }
+        [JsonProperty("imageName")]
+        public string ImageName { get; private set; }
 
         [JsonProperty("localization")]
         public string Localization { get; private set; }
@@ -31,15 +31,18 @@ namespace Appropose.Core.Domain.Entities
             Localization = localization;
             AngryCount = 0;
         }
-
-        public void UpdateImagePath(string imagePath)
+        public PostEntity()
         {
-            ImagePath = imagePath;
         }
 
         public static PostEntity Create(string title, string description, string localization)
         {
             return new PostEntity(title, description, localization);
+        }
+
+        public void SetImageName(string imageName)
+        {
+            ImageName = imageName;
         }
 
     }
