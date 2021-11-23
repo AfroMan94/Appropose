@@ -3,12 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Appropose.Core.Domain.Entities;
 using Appropose.Core.Interfaces;
-using Azure.Storage.Blobs;
+using Appropose.Functions.Extensions;
+using Appropose.Functions.FluentErrors;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using ToDoList.Functions.FluentErrors;
 using Microsoft.Extensions.Configuration;
 using static System.String;
 
@@ -16,38 +16,44 @@ namespace Appropose.Functions.Commands
 {
     public class AddPostCommand : IRequest<Result>
     {
-        public AddPostCommand(string title, string description, string localization, IFormFile image)
+        public AddPostCommand(string title, string description, float latitude, float longitude, IFormFile image)
         {
             Title = title;
             Description = description;
-            Localization = localization;
+            Latitude = latitude;
+            Longitude = longitude;
             Image = image;
         }
 
         public string Title { get; }
         public string Description { get;}
-        public string Localization { get; }
+        public float? Latitude { get; }
+        public float? Longitude { get; }
         public IFormFile Image { get; }
     }
 
     public class AddPostCommandHandler : IRequestHandler<AddPostCommand, Result>
     {
-
         private readonly ILogger _logger;
         private readonly IPostRepository _repo;
-        private readonly BlobServiceClient _blobServiceClient;
         private readonly IStorageService _storageService;
+        private readonly IConfiguration _configuration;
 
-        public AddPostCommandHandler(ILogger logger, IPostRepository repo, BlobServiceClient blobServiceClient, IStorageService storageService)
+        public AddPostCommandHandler(ILogger logger, IPostRepository repo, IStorageService storageService, IConfiguration configuration)
         {
             _logger = logger;
             _repo = repo;
-            _blobServiceClient = blobServiceClient;
             _storageService = storageService;
+            _configuration = configuration;
         }
 
         public async Task<Result> Handle(AddPostCommand request, CancellationToken cancellationToken)
         {
+            if (!request.Image.IsImage())
+            {
+                return Result.Fail(new ValidationError("Image is not valid"));
+            }
+
             if (IsNullOrWhiteSpace(request.Description))
             {
                 return Result.Fail(new ValidationError("Description must be specified"));
@@ -58,9 +64,14 @@ namespace Appropose.Functions.Commands
                 return Result.Fail(new ValidationError("Title must be specified"));
             }
 
-            if (IsNullOrWhiteSpace(request.Localization))
+            if (request.Latitude is null)
             {
-                return Result.Fail(new ValidationError("Localization must be specified"));
+                return Result.Fail(new ValidationError("Latitude must be specified"));
+            }
+
+            if (request.Longitude is null)
+            {
+                return Result.Fail(new ValidationError("Longitude must be specified"));
             }
 
             if (request.Image is null)
@@ -68,14 +79,15 @@ namespace Appropose.Functions.Commands
                 return Result.Fail(new ValidationError("Image is mandatory"));
             }
 
-            var entity = PostEntity.Create(request.Title, request.Description, request.Localization);
+            var entity = PostEntity.Create(request.Title, request.Description, (float) request.Latitude, (float) request.Longitude);
 
             try
             {
                 await _repo.AddItemAsync(entity);
                 var fileName = $"{Guid.NewGuid()}-{request.Image.FileName}";
                 await _storageService.UploadImageAsync(request.Image, fileName);
-                entity.SetImageName(fileName);
+                var imageUrl = $"{_configuration["StorageServiceUri"]}/images/{fileName}";
+                entity.SetImageUrl(imageUrl);
                 await _repo.UpdateItemAsync(entity.Id, entity);
             }
             catch (Exception ex)

@@ -57,13 +57,14 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
             }
         }
 
-        public async Task<IEnumerable<T>> GetItemsAsync(string query, Dictionary<string, object> queryParams)
+        public async Task<IEnumerable<T>> GetItemsAsync(string query, Dictionary<string, object> queryParams = null)
         {
             var queryDefinition = new QueryDefinition(query);
-            foreach (var param in queryParams)
-            {
-                queryDefinition.WithParameter(param.Key, param.Value);
-            }
+            if (queryParams != null)
+                foreach (var param in queryParams)
+                {
+                    queryDefinition.WithParameter(param.Key, param.Value);
+                }
 
             FeedIterator<T> resultSetIterator = _container.GetItemQueryIterator<T>(queryDefinition);
             List<T> results = new List<T>();

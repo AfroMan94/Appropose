@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 
-namespace ToDoList.Functions.FluentErrors
+namespace Appropose.Functions.FluentErrors
 {
     class RuntimeError: Error
     {
