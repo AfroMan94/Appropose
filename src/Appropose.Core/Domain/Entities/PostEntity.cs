@@ -32,7 +32,10 @@ namespace Appropose.Core.Domain.Entities
         [JsonProperty("solutions")]
         public string[] Solutions { get; private set; }
 
-        private PostEntity(string title, string description, float latitude, float longitude)
+        [JsonProperty("userId")]
+        public string UserId { get; private set; }
+
+        private PostEntity(string title, string description, float latitude, float longitude, string userId)
         {
             Id = Guid.NewGuid().ToString();
             Title = title;
@@ -40,15 +43,16 @@ namespace Appropose.Core.Domain.Entities
             Latitude = latitude;
             Longitude = longitude;
             CreatedOn = DateTime.Now;
+            UserId = userId;
             AngryCount = 0;
         }
         public PostEntity()
         {
         }
 
-        public static PostEntity Create(string title, string description, float latitude, float longitude)
+        public static PostEntity Create(string title, string description, float latitude, float longitude, string userId)
         {
-            return new PostEntity(title, description, latitude, longitude);
+            return new PostEntity(title, description, latitude, longitude, userId);
         }
 
         public void SetImageUrl(string imageUrl)

@@ -36,7 +36,7 @@ namespace Appropose.Functions
 
             services.AddMediatR(typeof(Startup));
 
-            CosmosDbSettings cosmosDbConfig = configuration.GetSection("ToDoListCosmosDb").Get<CosmosDbSettings>();
+            CosmosDbSettings cosmosDbConfig = configuration.GetSection("ApproposeCosmosDb").Get<CosmosDbSettings>();
             services.AddCosmosDb(cosmosDbConfig.EndpointUrl,
                 cosmosDbConfig.PrimaryKey,
                 cosmosDbConfig.DatabaseName,
