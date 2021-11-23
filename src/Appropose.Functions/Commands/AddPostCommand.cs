@@ -16,17 +16,19 @@ namespace Appropose.Functions.Commands
 {
     public class AddPostCommand : IRequest<Result>
     {
-        public AddPostCommand(string title, string description, float latitude, float longitude, IFormFile image)
+        public AddPostCommand(string title, string description, float latitude, float longitude, string userId, IFormFile image)
         {
             Title = title;
             Description = description;
             Latitude = latitude;
             Longitude = longitude;
+            UserId = userId;
             Image = image;
         }
 
         public string Title { get; }
         public string Description { get;}
+        public string UserId { get; }
         public float? Latitude { get; }
         public float? Longitude { get; }
         public IFormFile Image { get; }
@@ -54,6 +56,11 @@ namespace Appropose.Functions.Commands
                 return Result.Fail(new ValidationError("Image is not valid"));
             }
 
+            if (IsNullOrWhiteSpace(request.UserId))
+            {
+                return Result.Fail(new ValidationError("UserId must be specified"));
+            }
+
             if (IsNullOrWhiteSpace(request.Description))
             {
                 return Result.Fail(new ValidationError("Description must be specified"));
@@ -79,7 +86,7 @@ namespace Appropose.Functions.Commands
                 return Result.Fail(new ValidationError("Image is mandatory"));
             }
 
-            var entity = PostEntity.Create(request.Title, request.Description, (float) request.Latitude, (float) request.Longitude);
+            var entity = PostEntity.Create(request.Title, request.Description, (float) request.Latitude, (float) request.Longitude, request.UserId);
 
             try
             {
