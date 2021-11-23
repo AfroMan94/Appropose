@@ -12,7 +12,7 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
         /// <summary>
         ///     CosmosDB container name
         /// </summary>
-        public override string ContainerName { get; } = "ToDoItems";
+        public override string ContainerName { get; } = "Posts";
 
         /// <summary>
         ///     Returns the value of the partition key

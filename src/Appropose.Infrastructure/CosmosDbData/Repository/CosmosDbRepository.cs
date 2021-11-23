@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Appropose.Core.Domain.Entities;
 using Appropose.Core.Interfaces;
 using Appropose.Infrastructure.CosmosDbData.Interfaces;
 

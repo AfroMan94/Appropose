@@ -4,13 +4,10 @@
 	    <AzureFunctionsVersion>v3</AzureFunctionsVersion>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="BCrypt" Version="1.0.0" />
 		<PackageReference Include="FluentResults" Version="3.0.0" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.21">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.13" />
 	</ItemGroup>
 	<ItemGroup>
