@@ -13,5 +13,8 @@ namespace Appropose.Core.Domain.Entities
         [JsonProperty("post")]
         public string[] Posts { get; set; }
 
+        [JsonProperty("azureToken")]
+        public string AzureToken { get; set; }
+
     }
 }

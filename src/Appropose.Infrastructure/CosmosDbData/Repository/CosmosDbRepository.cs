@@ -76,6 +76,25 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
 
             return results;
         }
+        public async Task<T> GetItemAsync(string query, Dictionary<string, object> queryParams)
+        {
+            var queryDefinition = new QueryDefinition(query);
+            foreach (var param in queryParams)
+            {
+                queryDefinition.WithParameter(param.Key, param.Value);
+            }
+
+            FeedIterator<T> resultSetIterator = _container.GetItemQueryIterator<T>(queryDefinition);
+            List<T> results = new List<T>();
+            while (resultSetIterator.HasMoreResults)
+            {
+                FeedResponse<T> response = await resultSetIterator.ReadNextAsync();
+
+                results.AddRange(response.ToList());
+            }
+
+            return results.SingleOrDefault();
+        }
 
         public async Task UpdateItemAsync(string id, T item)
         {
