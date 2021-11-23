@@ -7,6 +7,7 @@ using Appropose.Infrastructure.AppSettings;
 using Appropose.Infrastructure.CosmosDbData;
 using Appropose.Infrastructure.CosmosDbData.Interfaces;
 using Appropose.Infrastructure.Services;
+using Azure.Storage.Blobs;
 using Microsoft.Azure.Cosmos;
 
 namespace Appropose.Infrastructure.Extensions
@@ -45,8 +46,7 @@ namespace Appropose.Infrastructure.Extensions
         /// <param name="configuration"></param>
         public static void SetupStorage(this IServiceCollection services, IConfiguration configuration)
         {
-            StorageFactory.Modules.UseAzureBlobStorage();
-
+            var blobServiceClient = new BlobServiceClient(configuration.GetConnectionString("StorageConnectionString"))
             // Register IBlobStorage, which is used in AzureBlobStorageService
             // Avoid using IBlobStorage directly outside of AzureBlobStorageService.
             services.AddScoped(

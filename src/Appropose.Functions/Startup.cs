@@ -37,8 +37,7 @@ namespace Appropose.Functions
 
             services.AddMediatR(typeof(Startup));
 
-            string salt = BCryptHelper.GenerateSalt(6);
-            var password = BCryptHelper.HashPassword("password", salt);
+            services.Add
 
             // Bind database-related bindings
             CosmosDbSettings cosmosDbConfig = configuration.GetSection("ToDoListCosmosDb").Get<CosmosDbSettings>();
@@ -47,6 +46,8 @@ namespace Appropose.Functions
                 cosmosDbConfig.PrimaryKey,
                 cosmosDbConfig.DatabaseName,
                 cosmosDbConfig.Containers);
+
+            services.SetupStorage(configuration);
 
             services.AddScoped<IPostRepository, PostRepository>();
         }

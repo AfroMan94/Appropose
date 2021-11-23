@@ -19,7 +19,7 @@ namespace Appropose.Infrastructure.Services
             _blobStorage = blobStorage ?? throw new ArgumentNullException(nameof(blobStorage));
         }
 
-        public async Task<string> UploadFile(IFormFile file, string fullPath)
+        public async Task<string> UploadFileAsync(IFormFile file, string fullPath)
         {
             await using Stream str = file.OpenReadStream();
             await _blobStorage.WriteAsync(fullPath, str);
@@ -27,7 +27,7 @@ namespace Appropose.Infrastructure.Services
             return fullPath;
         }
 
-        public async Task<Stream> GetFileStream(string filePath)
+        public async Task<Stream> GetFileStreamAsync(string filePath)
         {
             MemoryStream ms = new MemoryStream();
             await _blobStorage.ReadToStreamAsync(filePath, ms);

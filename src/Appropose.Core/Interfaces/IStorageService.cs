@@ -12,13 +12,13 @@ namespace Appropose.Core.Interfaces
         /// <param name="file"></param>
         /// <param name="fullPath"></param>
         /// <returns></returns>
-        Task<string> UploadFile(IFormFile file, string fullPath);
+        Task<string> UploadFileAsync(IFormFile file, string fullPath);
 
         /// <summary>
         ///     Get the file stream by full path
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        Task<Stream> GetFileStream(string filePath);
+        Task<Stream> GetFileStreamAsync(string filePath);
     }
 }
