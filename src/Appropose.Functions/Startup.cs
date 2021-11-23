@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Appropose.Core.Interfaces;
 using Appropose.Infrastructure.AppSettings;
 using MediatR;
@@ -8,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Appropose.Infrastructure.CosmosDbData.Repository;
 using Appropose.Infrastructure.Extensions;
-using DevOne.Security.Cryptography.BCrypt;
+using Appropose.Infrastructure.Services;
 
 [assembly: FunctionsStartup(typeof(Appropose.Functions.Startup))]
 
@@ -37,9 +36,6 @@ namespace Appropose.Functions
 
             services.AddMediatR(typeof(Startup));
 
-            string salt = BCryptHelper.GenerateSalt(6);
-            var password = BCryptHelper.HashPassword("password", salt);
-
             // Bind database-related bindings
             CosmosDbSettings cosmosDbConfig = configuration.GetSection("ToDoListCosmosDb").Get<CosmosDbSettings>();
             // register CosmosDB client and data repositories
@@ -48,6 +44,8 @@ namespace Appropose.Functions
                 cosmosDbConfig.DatabaseName,
                 cosmosDbConfig.Containers);
 
+            //services.SetupStorage(configuration);
+            services.AddScoped<IStorageService, AzureBlobStorageService>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddAutoMapper(this.GetType().Assembly);
