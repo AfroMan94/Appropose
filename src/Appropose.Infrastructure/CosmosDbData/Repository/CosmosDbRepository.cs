@@ -11,32 +11,21 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
 {
     public abstract class CosmosDbRepository<T> : IRepository<T>, IContainerContext<T> where T : BaseEntity
     {
-        /// <summary>
-        ///     Name of the CosmosDB container
-        /// </summary>
-        public abstract string ContainerName { get; }
-
-        public abstract PartitionKey ResolvePartitionKey(string entityId);
-
-        /// <summary>
-        ///     Cosmos DB factory
-        /// </summary>
         private readonly ICosmosDbContainerFactory _cosmosDbContainerFactory;
-
-        /// <summary>
-        ///     Cosmos DB container
-        /// </summary>
         private readonly Container _container;
 
-        public CosmosDbRepository(ICosmosDbContainerFactory cosmosDbContainerFactory)
+        public abstract PartitionKey ResolvePartitionKey(string entityId);
+        public abstract string ContainerName { get; }
+
+        protected CosmosDbRepository(ICosmosDbContainerFactory cosmosDbContainerFactory)
         {
-            this._cosmosDbContainerFactory = cosmosDbContainerFactory ?? throw new ArgumentNullException(nameof(ICosmosDbContainerFactory));
-            this._container = this._cosmosDbContainerFactory.GetContainer(ContainerName)._container;
+            _cosmosDbContainerFactory = cosmosDbContainerFactory;
+            _container = _cosmosDbContainerFactory.GetContainer(ContainerName)._container;
         }
 
         public async Task AddItemAsync(T item)
         {
-            await _container.CreateItemAsync<T>(item, ResolvePartitionKey(item.Id));
+            await _container.CreateItemAsync(item, ResolvePartitionKey(item.Id));
         }
 
         public async Task DeleteItemAsync(string id)
@@ -99,8 +88,7 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
 
         public async Task UpdateItemAsync(string id, T item)
         {
-            // Update
-            await _container.UpsertItemAsync<T>(item, ResolvePartitionKey(id));
+            await _container.UpsertItemAsync(item, ResolvePartitionKey(id));
         }
 
     }

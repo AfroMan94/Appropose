@@ -22,6 +22,5 @@ namespace Appropose.Infrastructure.Services
             var blob = _blobContainerClient.GetBlobClient(fileName);
             await blob.UploadAsync(file.OpenReadStream());
         }
-
     }
 }

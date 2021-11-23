@@ -10,9 +10,6 @@ namespace Appropose.Core.Domain.Entities
         [JsonProperty("password")]
         public string Password { get; set; }
 
-        [JsonProperty("post")]
-        public string[] Posts { get; set; }
-
         [JsonProperty("azureToken")]
         public string AzureToken { get; set; }
 

@@ -68,7 +68,7 @@ namespace Appropose.Functions.Commands
 
                 var response = _mapper.Map<UserLoginCommandResponse>(user);
 
-                return Result.Ok(response) ;
+                return Result.Ok(response);
             }
             catch (Exception ex)
             {

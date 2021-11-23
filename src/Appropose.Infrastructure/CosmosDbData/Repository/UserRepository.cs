@@ -12,14 +12,13 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
         public UserRepository(ICosmosDbContainerFactory factory) : base(factory)
         { }
 
-        public override string ContainerName { get; } = "Users";
+        public override string ContainerName => "Users";
         public override PartitionKey ResolvePartitionKey(string entityId) => new PartitionKey(entityId);
 
         public async Task<UserEntity> GetUserByLogin(string login)
         {
             string query = @"SELECT * FROM u WHERE u.login = @login";
             var queryParams = new Dictionary<string, object> {{ "@login", login }};
-
             return await GetItemAsync(query, queryParams);
         }
     }

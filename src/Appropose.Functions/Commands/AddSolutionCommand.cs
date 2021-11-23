@@ -8,50 +8,46 @@ using Appropose.Functions.FluentErrors;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using static System.String;
 
 namespace Appropose.Functions.Commands
 {
-    public class AddPostCommand : IRequest<Result>
+    public class AddSolutionCommand : IRequest<Result>
     {
-        public AddPostCommand(string title, string question, string description, float latitude, float longitude, string userId, IFormFile image)
+        public string Title { get; }
+        public string Description { get; }
+        public string UserId { get; }
+        public string PostId { get; }
+        public IFormFile Image { get; }
+
+        public AddSolutionCommand(string title, string description, string userId, string postId, IFormFile image)
         {
             Title = title;
-            Question = question;
             Description = description;
-            Latitude = latitude;
-            Longitude = longitude;
             UserId = userId;
+            PostId = postId;
             Image = image;
         }
-
-        public string Title { get; }
-        public string Question { get; }
-        public string Description { get;}
-        public string UserId { get; }
-        public float? Latitude { get; }
-        public float? Longitude { get; }
-        public IFormFile Image { get; }
     }
 
-    public class AddPostCommandHandler : IRequestHandler<AddPostCommand, Result>
+    public class AddSolutionCommandHandler : IRequestHandler<AddSolutionCommand, Result>
     {
         private readonly ILogger _logger;
-        private readonly IPostRepository _repo;
-        private readonly IStorageService _storageService;
+        private readonly ISolutionRepository _solutionRepository;
         private readonly IConfiguration _configuration;
+        private readonly IStorageService _storageService;
 
-        public AddPostCommandHandler(ILogger logger, IPostRepository repo, IStorageService storageService, IConfiguration configuration)
+        public AddSolutionCommandHandler(ILogger logger, ISolutionRepository solutionRepository, IStorageService storageService, IConfiguration configuration)
         {
             _logger = logger;
-            _repo = repo;
+            _solutionRepository = solutionRepository;
             _storageService = storageService;
             _configuration = configuration;
         }
 
-        public async Task<Result> Handle(AddPostCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(AddSolutionCommand request, CancellationToken cancellationToken)
         {
             if (!request.Image.IsImage())
             {
@@ -63,14 +59,14 @@ namespace Appropose.Functions.Commands
                 return Result.Fail(new ValidationError("UserId must be specified"));
             }
 
+            if (IsNullOrWhiteSpace(request.PostId))
+            {
+                return Result.Fail(new ValidationError("PostId must be specified"));
+            }
+
             if (IsNullOrWhiteSpace(request.Description))
             {
                 return Result.Fail(new ValidationError("Description must be specified"));
-            }
-
-            if (IsNullOrWhiteSpace(request.Question))
-            {
-                return Result.Fail(new ValidationError("Question must be specified"));
             }
 
             if (IsNullOrWhiteSpace(request.Title))
@@ -78,31 +74,21 @@ namespace Appropose.Functions.Commands
                 return Result.Fail(new ValidationError("Title must be specified"));
             }
 
-            if (request.Latitude is null)
-            {
-                return Result.Fail(new ValidationError("Latitude must be specified"));
-            }
-
-            if (request.Longitude is null)
-            {
-                return Result.Fail(new ValidationError("Longitude must be specified"));
-            }
-
             if (request.Image is null)
             {
                 return Result.Fail(new ValidationError("Image is mandatory"));
             }
 
-            var entity = PostEntity.Create(request.Title, request.Question, request.Description, (float) request.Latitude, (float) request.Longitude, request.UserId);
+            var entity = SolutionEntity.Create(request.Title, request.Description, request.UserId, request.PostId);
 
             try
             {
-                await _repo.AddItemAsync(entity);
+                await _solutionRepository.AddItemAsync(entity);
                 var fileName = $"{Guid.NewGuid()}-{request.Image.FileName}";
                 await _storageService.UploadImageAsync(request.Image, fileName);
                 var imageUrl = $"{_configuration["StorageServiceUri"]}/images/{fileName}";
                 entity.SetImageUrl(imageUrl);
-                await _repo.UpdateItemAsync(entity.Id, entity);
+                await _solutionRepository.UpdateItemAsync(entity.Id, entity);
             }
             catch (Exception ex)
             {

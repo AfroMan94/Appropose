@@ -3,13 +3,10 @@ using Newtonsoft.Json;
 
 namespace Appropose.Core.Domain.Entities
 {
-    public class PostEntity : BaseEntity
+    public class SolutionEntity : BaseEntity
     {
         [JsonProperty("title")]
         public string Title { get; private set; }
-
-        [JsonProperty("question")]
-        public string Question { get; private set; }
 
         [JsonProperty("description")]
         public string Description { get; private set; }
@@ -17,14 +14,8 @@ namespace Appropose.Core.Domain.Entities
         [JsonProperty("imageUrl")]
         public string ImageUrl { get; private set; }
 
-        [JsonProperty("latitude")]
-        public float Latitude { get; private set; }
-
-        [JsonProperty("longitude")]
-        public float Longitude { get; private set; }
-
-        [JsonProperty("angryCount")]
-        public int AngryCount { get; private set; }
+        [JsonProperty("likesCount")]
+        public int LikesCount { get; private set; }
 
         [JsonProperty("createdOn")]
         public DateTime CreatedOn { get; private set; }
@@ -32,28 +23,30 @@ namespace Appropose.Core.Domain.Entities
         [JsonProperty("modifiedOn")]
         public DateTime ModifiedOn { get; private set; }
 
+        [JsonProperty("postId")]
+        public string PostId { get; private set; }
+
         [JsonProperty("userId")]
         public string UserId { get; private set; }
 
-        private PostEntity(string title, string question, string description, float latitude, float longitude, string userId)
+        private SolutionEntity(string title, string description, string userId, string postId)
         {
             Id = Guid.NewGuid().ToString();
             Title = title;
-            Question = question;
             Description = description;
-            Latitude = latitude;
-            Longitude = longitude;
             CreatedOn = DateTime.Now;
             UserId = userId;
-            AngryCount = 0;
+            PostId = postId;
+            LikesCount = 0;
         }
-        public PostEntity()
+
+        public SolutionEntity()
         {
         }
 
-        public static PostEntity Create(string title, string question, string description, float latitude, float longitude, string userId)
+        public static SolutionEntity Create(string title, string description, string userId, string postId)
         {
-            return new PostEntity(title, question, description, latitude, longitude, userId);
+            return new SolutionEntity(title, description, userId, postId);
         }
 
         public void SetImageUrl(string imageUrl)

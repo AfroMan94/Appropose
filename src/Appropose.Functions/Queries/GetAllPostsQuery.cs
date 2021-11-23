@@ -52,7 +52,7 @@ namespace Appropose.Functions.Queries
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Something went wrong during adding post");
+                _logger.LogError(ex, "Something went wrong during fetching posts");
                 return Result.Fail(new RuntimeError("Something went wrong during fetching posts"));
             }
         }

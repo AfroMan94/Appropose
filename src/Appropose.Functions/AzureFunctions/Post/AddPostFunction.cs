@@ -27,6 +27,7 @@ namespace Appropose.Functions.AzureFunctions
             var imageFile = req.Form.Files["image"];
             if (!formData.TryGetValue("title", out var titleValue) ||
                 !formData.TryGetValue("description", out var descriptionValue) ||
+                !formData.TryGetValue("question", out var questionValue) ||
                 !formData.TryGetValue("latitude", out var latitudeValue) ||
                 !formData.TryGetValue("longitude", out var longtitudeValue) ||
                 !formData.TryGetValue("userId", out var userIdValue)
@@ -35,17 +36,16 @@ namespace Appropose.Functions.AzureFunctions
                 return new BadRequestObjectResult("Not all required fields are specified!");
             }
 
-            float latitude;
-            float longtitude;
-            if (!float.TryParse(latitudeValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out latitude) ||
-                !float.TryParse(longtitudeValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out longtitude))
+            if (!float.TryParse(latitudeValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var latitude) ||
+                !float.TryParse(longtitudeValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var longtitude))
             {
                 return new BadRequestObjectResult("Latitude or Longtitude format is wrong!");
             }
 
             var command = new AddPostCommand(
                 titleValue, 
-                descriptionValue, 
+                questionValue,
+                descriptionValue,
                 latitude, 
                 longtitude,
                 userIdValue,

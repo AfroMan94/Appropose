@@ -45,6 +45,7 @@ namespace Appropose.Functions
             services.AddScoped<IStorageService, AzureBlobStorageService>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISolutionRepository, SolutionRepository>();
 
             var mapperConfig = new MapperConfiguration(mc =>
             {

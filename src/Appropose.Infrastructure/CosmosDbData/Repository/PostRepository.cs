@@ -10,16 +10,8 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
 {
     public class PostRepository : CosmosDbRepository<PostEntity>, IPostRepository
     {
-        /// <summary>
-        ///     CosmosDB container name
-        /// </summary>
-        public override string ContainerName { get; } = "Posts";
+        public override string ContainerName => "Posts";
 
-        /// <summary>
-        ///     Returns the value of the partition key
-        /// </summary>
-        /// <param name="entityId"></param>
-        /// <returns></returns>
         public override PartitionKey ResolvePartitionKey(string entityId) => new PartitionKey(entityId);
 
         public PostRepository(ICosmosDbContainerFactory factory) : base(factory)
@@ -30,6 +22,13 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
             string query = @"SELECT * FROM posts";
             var result = await GetItemsAsync(query);
             return result.ToList();
+        }
+
+        public async Task<IEnumerable<PostEntity>> GetAllUserPostsAsync(string userId)
+        {
+            string query = @"SELECT * FROM posts WHERE userId = @userId";
+            var queryParams = new Dictionary<string, object> {{ "@userId", userId }};
+            return await GetItemsAsync(query, queryParams);
         }
     }
 }

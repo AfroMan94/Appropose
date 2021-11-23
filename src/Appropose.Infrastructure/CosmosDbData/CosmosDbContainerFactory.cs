@@ -10,19 +10,10 @@ namespace Appropose.Infrastructure.CosmosDbData
 {
     public class CosmosDbContainerFactory : ICosmosDbContainerFactory
     {
-        /// <summary>
-        ///     Azure Cosmos DB Client
-        /// </summary>
         private readonly CosmosClient _cosmosClient;
         private readonly string _databaseName;
         private readonly List<ContainerInfo> _containers;
 
-        /// <summary>
-        ///     Ctor
-        /// </summary>
-        /// <param name="cosmosClient"></param>
-        /// <param name="databaseName"></param>
-        /// <param name="containers"></param>
         public CosmosDbContainerFactory(CosmosClient cosmosClient,
                                    string databaseName,
                                    List<ContainerInfo> containers)
@@ -46,7 +37,7 @@ namespace Appropose.Infrastructure.CosmosDbData
         {
             DatabaseResponse database = await _cosmosClient.CreateDatabaseIfNotExistsAsync(_databaseName);
 
-            foreach (ContainerInfo container in _containers)
+            foreach (var container in _containers)
             {
                 await database.Database.CreateContainerIfNotExistsAsync(container.Name, container.PartitionKey);
             }
