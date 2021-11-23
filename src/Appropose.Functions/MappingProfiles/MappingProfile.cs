@@ -9,6 +9,7 @@ namespace Appropose.Functions.MappingProfiles
         public MappingProfile() {
             CreateMap<UserEntity, UserLoginCommandResponse>();
             CreateMap<PostEntity, GetAllPostsQueryResponse>();
+            CreateMap<SolutionEntity, GetSolutionForPostQueryResponse>();
         }
     }
 }

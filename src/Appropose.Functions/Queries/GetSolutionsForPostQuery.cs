@@ -20,6 +20,15 @@ namespace Appropose.Functions.Queries
 
     public class GetSolutionForPostQueryResponse
     {
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string ImageUrl { get; set; }
+        public int LikesCount { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
+        public string PostId { get; set; }
+        public string UserId { get; set; }
     }
 
     public class GetSolutionsForPostQueryHandler : IRequestHandler<GetSolutionsForPostQuery, Result<IEnumerable<GetSolutionForPostQueryResponse>>>
