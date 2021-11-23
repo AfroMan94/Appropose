@@ -47,6 +47,9 @@ namespace Appropose.Functions
             //services.SetupStorage(configuration);
             services.AddScoped<IStorageService, AzureBlobStorageService>();
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddAutoMapper(this.GetType().Assembly);
+
         }
     }
 }
