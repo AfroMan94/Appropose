@@ -22,12 +22,12 @@ namespace Appropose.Functions.AzureFunctions.Get
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req)
         {
-
             string userId = req.Query["userId"];
             string elementId = req.Query["elementId"];
 
             var query = new CheckIfUserIsAssociatedWithElementQuery(userId, elementId);
             var result = await _mediator.Send(query);
+
             return result.IsFailed ? result.GetErrorResponse() : new OkObjectResult(result.Value);
         }
     }
