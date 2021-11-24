@@ -30,7 +30,7 @@ namespace Appropose.Functions.Commands
         }
     }
 
-    public class ToggleuserAssociationWithElementCommandHandler : IRequestHandler<ToggleUserAssociationWithElementCommand, Result>
+    public class ToggleUserAssociationWithElementCommandHandler : IRequestHandler<ToggleUserAssociationWithElementCommand, Result>
     {
         private readonly ILogger _logger;
         private readonly IUserElementRepository _repository;
@@ -38,7 +38,7 @@ namespace Appropose.Functions.Commands
         private readonly ISolutionRepository _solutionRepository;
         private readonly IPostRepository _postRepository;
 
-        public ToggleuserAssociationWithElementCommandHandler(ILogger logger, IUserElementRepository repository, 
+        public ToggleUserAssociationWithElementCommandHandler(ILogger logger, IUserElementRepository repository, 
             IPostRepository postRepository, ISolutionRepository solutionRepository, IUserRepository userRepository)
         {
             _logger = logger;

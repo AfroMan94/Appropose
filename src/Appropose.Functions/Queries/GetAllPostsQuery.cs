@@ -39,13 +39,13 @@ namespace Appropose.Functions.Queries
         private readonly IPostRepository _repo;
         private readonly IMapper _mapper;
 
-
         public GetAllPostsQueryHandler(ILogger logger, IPostRepository repo, IMapper mapper)
         {
             _logger = logger;
             _repo = repo;
             _mapper = mapper;
         }
+
         public async Task<Result<IEnumerable<GetAllPostsQueryResponse>>> Handle(GetAllPostsQuery request, CancellationToken cancellationToken)
         {
             try
