@@ -86,7 +86,7 @@ namespace Appropose.Functions.Commands
                 await _solutionRepository.AddItemAsync(entity);
                 var fileName = $"{Guid.NewGuid()}-{request.Image.FileName}";
                 await _storageService.UploadImageAsync(request.Image, fileName);
-                var imageUrl = $"{_configuration["StorageServiceUri"]}/images/{fileName}";
+                var imageUrl = $"{_configuration["ImageStorageServiceUri"]}/{fileName}";
                 entity.SetImageUrl(imageUrl);
                 await _solutionRepository.UpdateItemAsync(entity.Id, entity);
             }
