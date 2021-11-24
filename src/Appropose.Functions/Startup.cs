@@ -46,6 +46,7 @@ namespace Appropose.Functions
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISolutionRepository, SolutionRepository>();
+            services.AddScoped<IUserElementRepository, UserElementRepository>();
 
             var mapperConfig = new MapperConfiguration(mc =>
             {
