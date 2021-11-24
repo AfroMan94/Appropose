@@ -29,6 +29,8 @@ namespace Appropose.Functions.Queries
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
         public string[] Solutions { get; set; }
+        public string Retailer { get; set; }
+        public string RetailerAddress { get; set; }
     }
 
     public class GetAllPostsQueryHandler : IRequestHandler<GetAllPostsQuery, Result<IEnumerable<GetAllPostsQueryResponse>>>
