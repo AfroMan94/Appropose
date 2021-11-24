@@ -35,13 +35,13 @@ namespace Appropose.Core.Domain.Entities
         [JsonProperty("userId")]
         public string UserId { get; private set; }
 
-        [JsonProperty("retailer")]
-        public string Retailer { get; private set; }
+        [JsonProperty("retailerName")]
+        public string RetailerName { get; private set; }
 
         [JsonProperty("retailerAddress")]
         public string RetailerAddress { get; private set; }
 
-        private PostEntity(string title, string question, string description, float latitude, float longitude, string userId, string retailer, string retailerAddress)
+        private PostEntity(string title, string question, string description, float latitude, float longitude, string userId, string retailerName, string retailerAddress)
         {
             Id = Guid.NewGuid().ToString();
             Title = title;
@@ -51,7 +51,7 @@ namespace Appropose.Core.Domain.Entities
             Longitude = longitude;
             CreatedOn = DateTime.Now;
             UserId = userId;
-            Retailer = retailer;
+            RetailerName = retailerName;
             RetailerAddress = retailerAddress;
             AngryCount = 0;
         }
@@ -59,9 +59,9 @@ namespace Appropose.Core.Domain.Entities
         {
         }
 
-        public static PostEntity Create(string title, string question, string description, float latitude, float longitude, string userId, string retailer, string retailerAddress)
+        public static PostEntity Create(string title, string question, string description, float latitude, float longitude, string userId, string retailerName, string retailerAddress)
         {
-            return new PostEntity(title, question, description, latitude, longitude, userId, retailer, retailerAddress);
+            return new PostEntity(title, question, description, latitude, longitude, userId, retailerName, retailerAddress);
         }
 
         public void SetImageUrl(string imageUrl)

@@ -18,7 +18,7 @@ namespace Appropose.Functions.Commands
     public class AddPostCommand : IRequest<Result>
     {
         public AddPostCommand(string title, string question, string description, float latitude, float longitude, string userId, IFormFile image,
-            string retailer, string retailerAddress)
+            string retailerName, string retailerAddress)
         {
             Title = title;
             Question = question;
@@ -27,7 +27,7 @@ namespace Appropose.Functions.Commands
             Longitude = longitude;
             UserId = userId;
             Image = image;
-            Retailer = retailer;
+            RetailerName = retailerName;
             RetailerAddress = retailerAddress;
         }
 
@@ -38,7 +38,7 @@ namespace Appropose.Functions.Commands
         public float? Latitude { get; }
         public float? Longitude { get; }
         public IFormFile Image { get; }
-        public string Retailer { get; }
+        public string RetailerName { get; }
         public string RetailerAddress { get; }
     }
 
@@ -99,7 +99,7 @@ namespace Appropose.Functions.Commands
                 return Result.Fail(new ValidationError("Image is mandatory"));
             }
 
-            if (IsNullOrWhiteSpace(request.Retailer))
+            if (IsNullOrWhiteSpace(request.RetailerName))
             {
                 return Result.Fail(new ValidationError("Retailer must be specified"));
             }
@@ -109,7 +109,7 @@ namespace Appropose.Functions.Commands
                 return Result.Fail(new ValidationError("RetailerAddress must be specified"));
             }
 
-            var entity = PostEntity.Create(request.Title, request.Question, request.Description, (float) request.Latitude, (float) request.Longitude, request.UserId, request.Retailer, request.RetailerAddress);
+            var entity = PostEntity.Create(request.Title, request.Question, request.Description, (float) request.Latitude, (float) request.Longitude, request.UserId, request.RetailerName, request.RetailerAddress);
 
             try
             {
