@@ -32,6 +32,8 @@ namespace Appropose.Functions.AzureFunctions
                 !formData.TryGetValue("question", out var questionValue) ||
                 !formData.TryGetValue("latitude", out var latitudeValue) ||
                 !formData.TryGetValue("longitude", out var longtitudeValue) ||
+                !formData.TryGetValue("retailerName", out var retailerNameValue) ||
+                !formData.TryGetValue("retailerAddress", out var retailerAddressValue) ||
                 !formData.TryGetValue("userId", out var userIdValue)
                )
             {
@@ -51,7 +53,9 @@ namespace Appropose.Functions.AzureFunctions
                 latitude, 
                 longtitude,
                 userIdValue,
-                imageFile);
+                imageFile,
+                retailerNameValue,
+                retailerAddressValue);
             
             var result = await _mediator.Send(command);
             

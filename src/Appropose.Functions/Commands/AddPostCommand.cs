@@ -16,7 +16,8 @@ namespace Appropose.Functions.Commands
 {
     public class AddPostCommand : IRequest<Result>
     {
-        public AddPostCommand(string title, string question, string description, float latitude, float longitude, string userId, IFormFile image)
+        public AddPostCommand(string title, string question, string description, float latitude, float longitude, string userId, IFormFile image,
+            string retailer, string retailerAddress)
         {
             Title = title;
             Question = question;
@@ -25,6 +26,8 @@ namespace Appropose.Functions.Commands
             Longitude = longitude;
             UserId = userId;
             Image = image;
+            Retailer = retailer;
+            RetailerAddress = retailerAddress;
         }
 
         public string Title { get; }
@@ -34,6 +37,8 @@ namespace Appropose.Functions.Commands
         public float? Latitude { get; }
         public float? Longitude { get; }
         public IFormFile Image { get; }
+        public string Retailer { get; }
+        public string RetailerAddress { get; }
     }
 
     public class AddPostCommandHandler : IRequestHandler<AddPostCommand, Result>
@@ -93,7 +98,12 @@ namespace Appropose.Functions.Commands
                 return Result.Fail(new ValidationError("Image is mandatory"));
             }
 
-            var entity = PostEntity.Create(request.Title, request.Question, request.Description, (float) request.Latitude, (float) request.Longitude, request.UserId);
+            if (IsNullOrWhiteSpace(request.Retailer))
+            {
+                return Result.Fail(new ValidationError("Retailer must be specified"));
+            }
+
+            var entity = PostEntity.Create(request.Title, request.Question, request.Description, (float) request.Latitude, (float) request.Longitude, request.UserId, request.Retailer, request.RetailerAddress);
 
             try
             {
