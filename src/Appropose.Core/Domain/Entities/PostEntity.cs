@@ -64,6 +64,11 @@ namespace Appropose.Core.Domain.Entities
             return new PostEntity(title, question, description, latitude, longitude, userId, retailerName, retailerAddress);
         }
 
+        public void SetAngryCounter(int counter)
+        {
+            AngryCount = counter;
+        }
+
         public void SetImageUrl(string imageUrl)
         {
             ImageUrl = imageUrl;

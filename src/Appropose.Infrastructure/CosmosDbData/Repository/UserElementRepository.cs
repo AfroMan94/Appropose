@@ -23,5 +23,12 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
             var queryParams = new Dictionary<string, object> {{ "@userId", userId }, { "@elementId", elementId }};
             return await GetItemAsync(query, queryParams);
         }
+
+        public async Task<IEnumerable<UserElementEntity>> GetPostAssociationsAsync(string elementId)
+        {
+            var query = @"SELECT * FROM userElements ue WHERE ue.elementId = @elementId";
+            var queryParams = new Dictionary<string, object> {{ "@elementId", elementId }};
+            return await GetItemsAsync(query, queryParams);
+        }
     }
 }

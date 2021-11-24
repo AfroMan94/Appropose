@@ -9,6 +9,7 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using NetBox.Extensions;
 
 namespace Appropose.Functions.Queries
 {
@@ -37,12 +38,14 @@ namespace Appropose.Functions.Queries
     {
         private readonly ILogger _logger;
         private readonly IPostRepository _repo;
+        private readonly IUserElementRepository _userElementRepository;
         private readonly IMapper _mapper;
 
-        public GetAllPostsQueryHandler(ILogger logger, IPostRepository repo, IMapper mapper)
+        public GetAllPostsQueryHandler(ILogger logger, IPostRepository repo, IUserElementRepository userElementRepository, IMapper mapper)
         {
             _logger = logger;
             _repo = repo;
+            _userElementRepository = userElementRepository;
             _mapper = mapper;
         }
 
@@ -50,7 +53,12 @@ namespace Appropose.Functions.Queries
         {
             try
             {
-                var posts = await _repo.GetAllPostsAsync();
+                var posts = (await _repo.GetAllPostsAsync()).ToList();
+                foreach (var post in posts.ToList())
+                {
+                    var associations = await _userElementRepository.GetPostAssociationsAsync(post.Id);
+                    post.SetAngryCounter(associations.Count());
+                }
                 return Result.Ok(_mapper.Map<IEnumerable<GetAllPostsQueryResponse>>(posts.OrderByDescending(post => post.CreatedOn).ToList()));
             }
             catch (Exception ex)
