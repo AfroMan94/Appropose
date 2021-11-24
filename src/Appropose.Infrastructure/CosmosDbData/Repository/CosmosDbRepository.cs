@@ -1,5 +1,4 @@
 ﻿using Microsoft.Azure.Cosmos;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,7 +29,7 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
 
         public async Task DeleteItemAsync(string id)
         {
-            await this._container.DeleteItemAsync<T>(id, ResolvePartitionKey(id));
+            await _container.DeleteItemAsync<T>(id, ResolvePartitionKey(id));
         }
 
         public async Task<T> GetItemAsync(string id)

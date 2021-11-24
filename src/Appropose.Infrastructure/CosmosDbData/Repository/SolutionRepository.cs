@@ -19,7 +19,7 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
 
         public async Task<IEnumerable<SolutionEntity>> GetSolutionsForPostAsync(string postId)
         {
-            string query = @"SELECT * FROM solutions WHERE postId = @postId";
+            var query = @"SELECT * FROM solutions s WHERE s.postId = @postId";
             var queryParams = new Dictionary<string, object> {{ "@postId", postId }};
             return await GetItemsAsync(query, queryParams);
         }

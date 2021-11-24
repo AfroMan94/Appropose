@@ -19,14 +19,14 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
 
         public async Task<IEnumerable<PostEntity>> GetAllPostsAsync()
         {
-            string query = @"SELECT * FROM posts";
+            var query = @"SELECT * FROM posts";
             var result = await GetItemsAsync(query);
             return result.ToList();
         }
 
         public async Task<IEnumerable<PostEntity>> GetAllUserPostsAsync(string userId)
         {
-            string query = @"SELECT * FROM posts WHERE userId = @userId";
+            var query = @"SELECT * FROM posts WHERE userId = @userId";
             var queryParams = new Dictionary<string, object> {{ "@userId", userId }};
             return await GetItemsAsync(query, queryParams);
         }
