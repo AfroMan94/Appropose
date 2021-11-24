@@ -21,6 +21,8 @@ namespace Appropose.Functions.Queries
         public string Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string RetailerName { get; set; }
+        public string RetailerAddress { get; set; }
         public string Question { get; set; }
         public string ImageUrl { get; set; }
         public float Latitude { get; set; }

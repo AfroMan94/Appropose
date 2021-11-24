@@ -103,6 +103,11 @@ namespace Appropose.Functions.Commands
                 return Result.Fail(new ValidationError("Retailer must be specified"));
             }
 
+            if (IsNullOrWhiteSpace(request.RetailerAddress))
+            {
+                return Result.Fail(new ValidationError("RetailerAddress must be specified"));
+            }
+
             var entity = PostEntity.Create(request.Title, request.Question, request.Description, (float) request.Latitude, (float) request.Longitude, request.UserId, request.Retailer, request.RetailerAddress);
 
             try
