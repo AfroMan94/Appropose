@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Appropose.Core.Domain.Entities;
@@ -112,8 +113,11 @@ namespace Appropose.Functions.Commands
 
             try
             {
+                var imageFileName = new string(request.Image.FileName.ToCharArray()
+                    .Where(c => !char.IsWhiteSpace(c))
+                    .ToArray());
                 await _repo.AddItemAsync(entity);
-                var fileName = $"{Guid.NewGuid()}-{request.Image.FileName}";
+                var fileName = $"{Guid.NewGuid()}-{imageFileName}";
                 await _storageService.UploadImageAsync(request.Image, fileName);
                 var imageUrl = $"{_configuration["ImageStorageServiceUri"]}/{fileName}";
                 entity.SetImageUrl(imageUrl);
