@@ -26,7 +26,6 @@ namespace Appropose.Functions.Commands
         public string Id { get; set; }
         public string Login { get; set; }
         public string AzureKey { get; set; }
-        public string [] Posts { get; set; }
     }
 
     public class UserLoginHandler : IRequestHandler<UserLoginCommand, Result<UserLoginCommandResponse>>
@@ -57,13 +56,14 @@ namespace Appropose.Functions.Commands
                 var user = await _user.GetUserByLogin(request.Login);
                 if (user is null)
                 {
-                    Result.Fail(new NotFoundError("Not found"));
+                    return Result.Fail(new NotFoundError("Login or password is not correct"));
                 }
-                var result = BCryptHelper.CheckPassword(request.Password, user.Password);
+
+                var result = BCryptHelper.CheckPassword(request.Password, user?.Password);
 
                 if (!result)
                 {
-                    return Result.Fail(new ValidationError("Incorrect Password"));
+                    return Result.Fail(new NotFoundError("Login or password is not correct"));
                 }
 
                 var response = _mapper.Map<UserLoginCommandResponse>(user);

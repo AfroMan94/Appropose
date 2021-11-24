@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Appropose.Functions.AzureFunctions
 {
@@ -21,10 +22,11 @@ namespace Appropose.Functions.AzureFunctions
 
         [FunctionName("AddPostFunction")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req, ILogger log)
         {
             var formData = await req.ReadFormAsync();
-            var imageFile = req.Form.Files["image"];
+            log.LogInformation("formData", formData);
+            var imageFile = req.Form.Files?["image"];
             if (!formData.TryGetValue("title", out var titleValue) ||
                 !formData.TryGetValue("description", out var descriptionValue) ||
                 !formData.TryGetValue("question", out var questionValue) ||

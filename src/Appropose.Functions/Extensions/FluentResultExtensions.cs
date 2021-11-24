@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Channels;
 using Appropose.Functions.FluentErrors;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
@@ -32,12 +33,7 @@ namespace Appropose.Functions.Extensions
             if (result.HasError<RuntimeError>())
             {
                 var errors = result.Errors.OfType<RuntimeError>();
-                var serverError = new ObjectResult(GetErrorMessage(errors))
-                {
-                    StatusCode = 500
-                };
-
-                return serverError;
+                return new ObjectResult(GetErrorMessage(errors) ) { StatusCode = 500 };
             }
 
             throw new InvalidOperationException("No errors to process.");
