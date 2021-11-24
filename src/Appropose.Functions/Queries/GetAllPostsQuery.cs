@@ -21,7 +21,7 @@ namespace Appropose.Functions.Queries
         public string Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string RetailerName { get; set; }
+        public string Retailer { get; set; }
         public string RetailerAddress { get; set; }
         public string Question { get; set; }
         public string ImageUrl { get; set; }
@@ -31,8 +31,6 @@ namespace Appropose.Functions.Queries
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
         public string[] Solutions { get; set; }
-        public string Retailer { get; set; }
-        public string RetailerAddress { get; set; }
     }
 
     public class GetAllPostsQueryHandler : IRequestHandler<GetAllPostsQuery, Result<IEnumerable<GetAllPostsQueryResponse>>>
