@@ -56,7 +56,7 @@ namespace Appropose.Functions.Queries
                 var posts = (await _repo.GetAllPostsAsync()).ToList();
                 foreach (var post in posts.ToList())
                 {
-                    var associations = await _userElementRepository.GetPostAssociationsAsync(post.Id);
+                    var associations = await _userElementRepository.GetElementAssociationsAsync(post.Id);
                     post.SetAngryCounter(associations.Count());
                 }
                 return Result.Ok(_mapper.Map<IEnumerable<GetAllPostsQueryResponse>>(posts.OrderByDescending(post => post.CreatedOn).ToList()));

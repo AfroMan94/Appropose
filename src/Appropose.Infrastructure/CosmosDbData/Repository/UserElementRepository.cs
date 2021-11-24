@@ -24,7 +24,7 @@ namespace Appropose.Infrastructure.CosmosDbData.Repository
             return await GetItemAsync(query, queryParams);
         }
 
-        public async Task<IEnumerable<UserElementEntity>> GetPostAssociationsAsync(string elementId)
+        public async Task<IEnumerable<UserElementEntity>> GetElementAssociationsAsync(string elementId)
         {
             var query = @"SELECT * FROM userElements ue WHERE ue.elementId = @elementId";
             var queryParams = new Dictionary<string, object> {{ "@elementId", elementId }};

@@ -49,6 +49,11 @@ namespace Appropose.Core.Domain.Entities
             return new SolutionEntity(title, description, userId, postId);
         }
 
+        public void SetLikesCounter(int counter)
+        {
+            LikesCount = counter;
+        }
+
         public void SetImageUrl(string imageUrl)
         {
             ImageUrl = imageUrl;

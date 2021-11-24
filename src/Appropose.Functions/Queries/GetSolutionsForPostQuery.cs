@@ -35,20 +35,27 @@ namespace Appropose.Functions.Queries
     {
         private readonly ILogger _logger;
         private readonly ISolutionRepository _solutionRepository;
+        private readonly IUserElementRepository _userElementRepository;
         private readonly IMapper _mapper;
 
 
-        public GetSolutionsForPostQueryHandler(ILogger logger, ISolutionRepository solutionRepository, IMapper mapper)
+        public GetSolutionsForPostQueryHandler(ILogger logger, ISolutionRepository solutionRepository, IUserElementRepository userElementRepository, IMapper mapper)
         {
             _logger = logger;
             _solutionRepository = solutionRepository;
+            _userElementRepository = userElementRepository;
             _mapper = mapper;
         }
         public async Task<Result<IEnumerable<GetSolutionForPostQueryResponse>>> Handle(GetSolutionsForPostQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                var solutions = await _solutionRepository.GetSolutionsForPostAsync(request.PostId);
+                var solutions = (await _solutionRepository.GetSolutionsForPostAsync(request.PostId)).ToList();
+                foreach (var solution in solutions.ToList())
+                {
+                    var associations = await _userElementRepository.GetElementAssociationsAsync(solution.Id);
+                    solution.SetLikesCounter(associations.Count());
+                }
                 return Result.Ok(_mapper.Map<IEnumerable<GetSolutionForPostQueryResponse>>(solutions.OrderByDescending(solution => solution.CreatedOn).ToList()));
             }
             catch (Exception ex)

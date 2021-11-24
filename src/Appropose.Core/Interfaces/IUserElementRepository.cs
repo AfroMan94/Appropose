@@ -7,6 +7,6 @@ namespace Appropose.Core.Interfaces
     public interface IUserElementRepository : IRepository<UserElementEntity>
     {
         Task<UserElementEntity> GetUserAssociationAsync(string userId, string elementId);
-        Task<IEnumerable<UserElementEntity>> GetPostAssociationsAsync(string elementId);
+        Task<IEnumerable<UserElementEntity>> GetElementAssociationsAsync(string elementId);
     }
 }
