@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Appropose.Core.Interfaces;
 using Azure.Storage.Blobs;
@@ -17,10 +18,12 @@ namespace Appropose.Infrastructure.Services
             _blobContainerClient.CreateIfNotExists();
         }
 
-        public async Task UploadImageAsync(IFormFile file, string fileName)
+        public async Task<string> UploadImageAsync(IFormFile file)
         {
+            var fileName = Guid.NewGuid().ToString();
             var blob = _blobContainerClient.GetBlobClient(fileName);
             await blob.UploadAsync(file.OpenReadStream());
+            return fileName;
         }
     }
 }
